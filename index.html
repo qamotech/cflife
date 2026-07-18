@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Legacy Planner - Max Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            /* Vibrant Light Theme */
+            --bg: #f4f7f9;
+            --text: #2c3e50;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary: #4a90e2;
+            --secondary: #ff6b6b;
+            --accent: #1dd1a1;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --border: #e1e8ed;
+            --input-bg: #ffffff;
+            --input-text: #2c3e50;
+        }
+
+        body.dark-theme {
+            /* Sleek Dark Theme */
+            --bg: #121212;
+            --text: #f5f6fa;
+            --card-bg: #1e272e;
+            --primary: #03dac6;
+            --secondary: #ff9ff3;
+            --accent: #feca57;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --border: #353b48;
+            --input-bg: #2f3640;
+            --input-text: #f5f6fa;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background 0.5s ease, color 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism Sticky Top */
+        #top {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 1000;
+            border-bottom: 2px solid var(--primary);
+            padding: 10px 0;
+            box-shadow: 0 4px 30px var(--shadow);
+            transition: all 0.5s ease;
+        }
+
+        body.dark-theme #top {
+            background: rgba(18, 18, 18, 0.6);
+        }
+
+        #top h2 {
+            text-align: center;
+            margin: 5px 0 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px var(--shadow);
+            animation: pulse 2s infinite;
+        }
+
+        /* Max Effects Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            margin: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px var(--shadow);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            filter: brightness(1.2);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        #app {
+            flex: 1;
+            padding: 20px;
+        }
+
+        /* Upgraded Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px auto;
+            max-width: 650px;
+            border-left: 6px solid var(--primary);
+            border-right: 6px solid var(--accent);
+            box-shadow: 0 10px 20px var(--shadow);
+            scroll-margin-top: 180px; /* Perfect spacing for sticky header */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px var(--shadow);
+            border-left-color: var(--secondary);
+            border-right-color: var(--primary);
+        }
+
+        .card h2 {
+            border-bottom: 2px dashed var(--border);
+            padding-bottom: 10px;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 i {
+            font-size: 1.5rem;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover h2 i {
+            transform: rotate(360deg) scale(1.2);
+            color: var(--secondary) !important;
+        }
+
+        /* Interactive Inputs */
+        label {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: bold;
+            text-transform: uppercase;
+            display: block;
+            margin-top: 15px;
+            transition: color 0.3s ease;
+        }
+
+        input {
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            color: var(--input-text);
+            padding: 12px;
+            margin: 5px 0 10px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px var(--shadow);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--card-bg);
+            box-shadow: 0 0 15px rgba(74, 144, 226, 0.4);
+            transform: scale(1.02);
+        }
+
+        /* Scroll Buttons */
+        .scroll-btn-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .scroll-btn {
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--shadow);
+            transition: all 0.3s bounce;
+        }
+
+        .scroll-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            padding: 30px;
+            text-align: center;
+            border-top: 3px solid var(--primary);
+            box-shadow: 0 -5px 20px var(--shadow);
+            margin-top: auto;
+            transition: background 0.5s ease;
+        }
+
+        footer h3 {
+            margin-top: 0;
+            color: var(--text);
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            font-size: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+        }
+
+        /* Colorful Footer Hover Effects */
+        .footer-links a:nth-child(1):hover { color: #00b020; transform: translateY(-10px) scale(1.3) rotate(-10deg); } /* Khan */
+        .footer-links a:nth-child(2):hover { color: #2a73cc; transform: translateY(-10px) scale(1.3) rotate(10deg); } /* Coursera */
+        .footer-links a:nth-child(3):hover { color: #e62b1e; transform: translateY(-10px) scale(1.3) rotate(-10deg); } /* TED */
+        .footer-links a:nth-child(4):hover { color: #000000; transform: translateY(-10px) scale(1.3) rotate(10deg); filter: drop-shadow(0 0 5px white); } /* Wikipedia */
+
+    </style>
+</head>
+<body>
+
+    <div id="top" class="animate__animated animate__fadeInDown">
+        <h2><i class="fas fa-heartbeat animate__animated animate__heartBeat animate__infinite" style="color:var(--secondary)"></i> Legacy Planner</h2>
+        <div id="nav" style="display:flex;flex-wrap:wrap;justify-content:center;padding:5px;gap:5px;"></div>
+        <div id="ctrl" style="display:flex;flex-wrap:wrap;justify-content:center;padding:10px;gap:5px;border-top:1px solid var(--border);margin-top:10px;"></div>
+    </div>
+
+    <div id="app"></div>
+
+    <!-- Scroll Buttons -->
+    <div class="scroll-btn-container animate__animated animate__fadeInRight animate__delay-1s">
+        <button class="scroll-btn" onclick="window.scrollTo(0, 0)" title="Go to Top"><i class="fas fa-arrow-up"></i></button>
+        <button class="scroll-btn" onclick="window.scrollTo(0, document.body.scrollHeight)" title="Go to Bottom"><i class="fas fa-arrow-down"></i></button>
+    </div>
+
+    <!-- Educational Footer -->
+    <footer class="animate__animated animate__fadeInUp">
+        <h3>Keep Growing & Learning</h3>
+        <div class="footer-links">
+            <a href="https://www.khanacademy.org" target="_blank" title="Khan Academy"><i class="fas fa-leaf"></i></a>
+            <a href="https://www.coursera.org" target="_blank" title="Coursera"><i class="fas fa-laptop-code"></i></a>
+            <a href="https://www.ted.com" target="_blank" title="TED Talks"><i class="fas fa-lightbulb"></i></a>
+            <a href="https://www.wikipedia.org" target="_blank" title="Wikipedia"><i class="fab fa-wikipedia-w"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        const d = [
+            {t:"1. Spiritual", i:"fa-pray", f:["Prayer","Scripture","God's Word","Highs/Lows","Struggles","Overcame","Relationship","Church","Successes","Changes","Outside Service","Verse","Word"]},
+            {t:"2. Marriage", i:"fa-ring", f:["Love lang","Support","Intimacy","Goals","Habits"]},
+            {t:"3. Kids", i:"fa-child", f:["Strengths","Academics","Character","Needs"]},
+            {t:"4. Culture", i:"fa-home", f:["Values","Modelled","Improve","Rules","Responsibilities","Support","Traditions"]},
+            {t:"5. Health", i:"fa-apple-alt", f:["Health check","Nutrition","Exercise","Mental","Sleep","Care","Appointments","Long term"]},
+            {t:"6. Time", i:"fa-clock", f:["Saved","Enjoyed","Commitment","Regret","Rest","Rhythm"]},
+            {t:"7. Finance", i:"fa-wallet", f:["Budget","Savings","Assets","Real estate","Hold/Sell","Goals","Retirement","Insurance","Debt"]},
+            {t:"8. Legal", i:"fa-gavel", f:["Estate plan","Wills","Guardianship","Beneficiaries","Succession","Gaps","Legacy"]},
+            {t:"10. Business", i:"fa-briefcase", f:["Revenue","Profit","Marketing","Challenges","Changes","Growth","Goals"]},
+            {t:"13. Vision", i:"fa-eye", f:["Year vision","Success","Feeling"]},
+            {t:"14. Goal Mapping", i:"fa-map", f:["Family goals","Marriage goals","Financial goals","Personal goals","Owner","Step","Timeline"]},
+            {t:"Closing", i:"fa-door-closed", f:["Reflections","Prayer","Statements","Check ins"]}
+        ];
+
+        const n = document.getElementById("nav");
+        const o = document.getElementById("ctrl");
+        const a = document.getElementById("app");
+
+        // Build Cards & Nav
+        d.forEach((s, x) => {
+            const id = "s" + x;
+            
+            // Add staggered delay to nav buttons
+            const delay = (x * 0.1).toFixed(1);
+            
+            n.innerHTML += `<button class="btn animate__animated animate__fadeIn" style="animation-delay: ${delay}s" onclick="document.getElementById('${id}').scrollIntoView({behavior:'smooth'})">${s.t}</button>`;
+            
+            let el = document.createElement("div");
+            el.id = id;
+            el.className = `card animate__animated animate__zoomIn`;
+            el.style.animationDelay = `${delay}s`;
+            
+            el.innerHTML = `<h2><i class="fas ${s.i}" style="color:var(--primary)"></i> ${s.t}</h2>`;
+            
+            s.f.forEach(f => {
+                const fi = id + f.replace(/\s/g, '');
+                el.innerHTML += `
+                    <label>${f}</label>
+                    <input id="${fi}" placeholder="Enter ${f.toLowerCase()}..." value="${localStorage.getItem(fi) || ''}" oninput="localStorage.setItem('${fi}', this.value)">
+                `;
+            });
+            a.appendChild(el);
+        });
+
+        // Build Controls
+        const c = [
+            ["JSON", () => exp('json')],
+            ["TXT", () => exp('txt')],
+            ["Clear", ls],
+            ["Toggle Theme", () => document.body.classList.toggle('dark-theme')],
+            ["A+", () => fs(1.2)],
+            ["A-", () => fs(0.8)],
+            ["Date", () => alert(new Date().toDateString())],
+            ["Clock", () => alert(new Date().toLocaleTimeString())]
+        ];
+
+        c.forEach((b, x) => {
+            let btn = document.createElement("button");
+            btn.className = "btn animate__animated animate__fadeInUp";
+            btn.style.animationDelay = `${(x * 0.1) + 1}s`;
+            btn.innerText = b[0];
+            
+            // Give specific styles to specific buttons
+            if(b[0] === "Clear") btn.style.background = "linear-gradient(135deg, #ff4757, #ff6b81)";
+            if(b[0] === "Toggle Theme") btn.style.background = "linear-gradient(135deg, #2f3542, #57606f)";
+            
+            btn.onclick = b[1];
+            o.appendChild(btn);
+        });
+
+        function exp(t) {
+            const b = new Blob([JSON.stringify(localStorage)], {type: "text/plain"});
+            const u = URL.createObjectURL(b);
+            const l = document.createElement("a");
+            l.href = u;
+            l.download = "plan." + t;
+            l.click();
+        }
+
+        function ls() {
+            if (confirm('Clear all data? Warning: This cannot be undone!')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        let currentSize = 1;
+        function fs(s) {
+            currentSize = s === 1.2 ? currentSize + 0.1 : currentSize - 0.1;
+            document.body.style.fontSize = currentSize + 'rem';
+        }
+    </script>
+</body>
+</html>
